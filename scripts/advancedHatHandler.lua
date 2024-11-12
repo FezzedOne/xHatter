@@ -350,14 +350,34 @@ function update(dt)
         self.previousDirection = currentDirection
     end
 
-    if self.currentHat and self.currentHat.parameters.advancedHatter then
+    local safeEmoteCheck1 = function(params, currentEmote)
+        if type(params[self.emotes[currentEmote]]) == "table" then
+            return true
+        else
+            return false
+        end
+    end
+
+    local safeEmoteCheck2 = function(params, currentDir, currentEmote)
+        if type(params[currentDir]) == "table" then
+            if type(params[currentDir][self.emotes[currentEmote]]) == "table" then
+                return true
+            else
+                return false
+            end
+        else
+            return false
+        end
+    end
+
+    if self.currentHat and type(self.currentHat.parameters.advancedHatter) == "table" then
         if getVersion(false) == 2 then
-            if not self.currentHat.parameters.advancedHatter[currentDirectionName][self.emotes[currentEmote]] then
+            if not safeEmoteCheck2(self.currentHat.parameters.advancedHatter, currentDirection, currentEmote) then
                 currentEmote = "idle"
                 currentEmoteFrame = "idle"
             end
         else -- support previous version
-            if not self.currentHat.parameters.advancedHatter[self.emotes[currentEmote]] then
+            if not safeEmoteCheck1(self.currentHat.parameters.advancedHatter, currentEmote) then
                 currentEmote = "idle"
                 currentEmoteFrame = "idle"
             end
@@ -380,10 +400,11 @@ function update(dt)
             self.previousEmote = currentEmoteFrame
             self.previousDirection = currentDirection
         end
-    elseif self.currentHat and self.currentHat.parameters.xHatter then
+    elseif self.currentHat and type(self.currentHat.parameters.xHatter) == "table" then
         if currentDirection ~= self.previousDirection then
-            self.currentHat.parameters.directives =
-                self.currentHat.parameters.xHatter[currentDirection == -1 and "left" or "right"]
+            local dirString = self.currentHat.parameters.xHatter[currentDirection == -1 and "left" or "right"]
+            self.currentHat.parameters.directives = type(dirString) == "string" and dirString
+                or self.currentHat.parameters.directives
             player.setEquippedItem(self.slotName, self.currentHat)
 
             self.previousEmote = currentEmoteFrame
@@ -395,17 +416,17 @@ function update(dt)
         canUnderlay
         and self.currentHatUnderlay
         and self.currentHatUnderlay.parameters.underlaid
-        and self.currentHatUnderlay.parameters.advancedHatter
+        and type(self.currentHatUnderlay.parameters.advancedHatter) == "table"
     then
-        if getVersion(true) == 2 then
+        if getVersion(false) == 2 then
             if
-                not self.currentHatUnderlay.parameters.advancedHatter[currentDirectionName][self.emotes[currentEmote]]
+                not safeEmoteCheck2(self.currentHatUnderlay.parameters.advancedHatter, currentDirection, currentEmote)
             then
                 currentEmote = "idle"
                 currentEmoteFrame = "idle"
             end
         else -- support previous version
-            if not self.currentHatUnderlay.parameters.advancedHatter[self.emotes[currentEmote]] then
+            if not safeEmoteCheck1(self.currentHatUnderlay.parameters.advancedHatter, currentEmote) then
                 currentEmote = "idle"
                 currentEmoteFrame = "idle"
             end
@@ -418,10 +439,11 @@ function update(dt)
             self.previousEmote = currentEmoteFrame
             self.previousDirection = currentDirection
         end
-    elseif self.currentHatUnderlay and self.currentHatUnderlay.parameters.xHatter then
+    elseif self.currentHatUnderlay and type(self.currentHatUnderlay.parameters.xHatter) == "table" then
         if currentDirection ~= self.previousDirection then
-            self.currentHatUnderlay.parameters.directives =
-                self.currentHatUnderlay.parameters.xHatter[currentDirection == -1 and "left" or "right"]
+            local dirString = self.currentHatUnderlay.parameters.xHatter[currentDirection == -1 and "left" or "right"]
+            self.currentHatUnderlay.parameters.directives = type(dirString) == "string" and dirString
+                or self.currentHatUnderlay.parameters.directives
             player.setEquippedItem(self.underlaySlotName, self.currentHatUnderlay)
 
             self.previousEmote = currentEmoteFrame
@@ -429,10 +451,11 @@ function update(dt)
         end
     end
 
-    if self.currentChestItem and self.currentChestItem.parameters.xHatter then
+    if self.currentChestItem and type(self.currentChestItem.parameters.xHatter) == "table" then
         if currentDirection ~= self.previousDirection then
-            self.currentChestItem.parameters.directives =
-                self.currentChestItem.parameters.xHatter[currentDirection == -1 and "left" or "right"]
+            local dirString = self.currentChestItem.parameters.xHatter[currentDirection == -1 and "left" or "right"]
+            self.currentChestItem.parameters.directives = type(dirString) == "string" and dirString
+                or self.currentChestItem.parameters.directives
             player.setEquippedItem(self.chestSlotName, self.currentChestItem)
 
             self.previousEmote = currentEmoteFrame
@@ -440,10 +463,17 @@ function update(dt)
         end
     end
 
-    if self.currentChestItemUnderlay and self.currentChestItemUnderlay.parameters.xHatter then
+    if
+        canUnderlay
+        and self.currentChestItemUnderlay
+        and self.currentChestItemUnderlay.parameters.underlaid
+        and type(self.currentChestItemUnderlay.parameters.xHatter) == "table"
+    then
         if currentDirection ~= self.previousDirection then
-            self.currentChestItemUnderlay.parameters.directives =
+            local dirString =
                 self.currentChestItemUnderlay.parameters.xHatter[currentDirection == -1 and "left" or "right"]
+            self.currentChestItemUnderlay.parameters.directives = type(dirString) == "string" and dirString
+                or self.currentChestItemUnderlay.parameters.directives
             player.setEquippedItem(self.underlayChestSlotName, self.currentChestItemUnderlay)
 
             self.previousEmote = currentEmoteFrame
@@ -451,10 +481,11 @@ function update(dt)
         end
     end
 
-    if self.currentLegsItem and self.currentLegsItem.parameters.xHatter then
+    if self.currentLegsItem and type(self.currentLegsItem.parameters.xHatter) == "table" then
         if currentDirection ~= self.previousDirection then
-            self.currentLegsItem.parameters.directives =
-                self.currentLegsItem.parameters.xHatter[currentDirection == -1 and "left" or "right"]
+            local dirString = self.currentLegsItem.parameters.xHatter[currentDirection == -1 and "left" or "right"]
+            self.currentLegsItem.parameters.directives = type(dirString) == "string" and dirString
+                or self.currentLegsItem.parameters.directives
             player.setEquippedItem(self.legsSlotName, self.currentLegsItem)
 
             self.previousEmote = currentEmoteFrame
@@ -462,7 +493,12 @@ function update(dt)
         end
     end
 
-    if self.currentLegsItemUnderlay and self.currentLegsItemUnderlay.parameters.xHatter then
+    if
+        canUnderlay
+        and self.currentLegsItemUnderlay
+        and self.currentLegsItemUnderlay.parameters.underlaid
+        and type(self.currentLegsItemUnderlay.parameters.xHatter) == "table"
+    then
         if currentDirection ~= self.previousDirection then
             self.currentLegsItemUnderlay.parameters.directives =
                 self.currentLegsItemUnderlay.parameters.xHatter[currentDirection == -1 and "left" or "right"]
@@ -473,10 +509,11 @@ function update(dt)
         end
     end
 
-    if self.currentBackItem and self.currentBackItem.parameters.xHatter then
+    if self.currentBackItem and type(self.currentBackItem.parameters.xHatter) == "table" then
         if currentDirection ~= self.previousDirection then
-            self.currentBackItem.parameters.directives =
-                self.currentBackItem.parameters.xHatter[currentDirection == -1 and "left" or "right"]
+            local dirString = self.currentBackItem.parameters.xHatter[currentDirection == -1 and "left" or "right"]
+            self.currentBackItem.parameters.directives = type(dirString) == "string" and dirString
+                or self.currentBackItem.parameters.directives
             player.setEquippedItem(self.backSlotName, self.currentBackItem)
 
             self.previousEmote = currentEmoteFrame
@@ -484,10 +521,17 @@ function update(dt)
         end
     end
 
-    if self.currentBackItemUnderlay and self.currentBackItemUnderlay.parameters.xHatter then
+    if
+        canUnderlay
+        and self.currentBackItemUnderlay
+        and self.currentBackItemUnderlay.parameters.underlaid
+        and type(self.currentBackItemUnderlay.parameters.xHatter) == "table"
+    then
         if currentDirection ~= self.previousDirection then
-            self.currentBackItemUnderlay.parameters.directives =
+            local dirString =
                 self.currentBackItemUnderlay.parameters.xHatter[currentDirection == -1 and "left" or "right"]
+            self.currentBackItemUnderlay.parameters.directives = type(dirString) == "string" and dirString
+                or self.currentBackItemUnderlay.parameters.directives
             player.setEquippedItem(self.underlayBackSlotName, self.currentBackItemUnderlay)
 
             self.previousEmote = currentEmoteFrame
