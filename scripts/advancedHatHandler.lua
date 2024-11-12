@@ -51,14 +51,17 @@ end
 local function getHeadItem()
     local slotName = "headCosmetic"
     local currentItem = player.equippedItem(slotName)
+    if currentItem then currentItem.parameters = currentItem.parameters or {} end
 
     if not currentItem then
         slotName = "head"
         currentItem = player.equippedItem(slotName)
+        currentItem.parameters = currentItem.parameters or {}
     end
 
     if not currentItem then
         if self.innerHead then return nil, self.innerHead, self.mode end
+        if self.innerHead then self.innerHead.parameters = self.innerHead.parameters or {} end
     else
         return slotName, currentItem, "headItem"
     end
@@ -67,10 +70,12 @@ end
 local function getChestItem()
     local slotName = "chestCosmetic"
     local currentItem = player.equippedItem(slotName)
+    if currentItem then currentItem.parameters = currentItem.parameters or {} end
 
     if not currentItem then
         slotName = "chest"
         currentItem = player.equippedItem(slotName)
+        if currentItem then currentItem.parameters = currentItem.parameters or {} end
     end
     return slotName, currentItem
 end
@@ -78,10 +83,12 @@ end
 local function getLegsItem()
     local slotName = "legsCosmetic"
     local currentItem = player.equippedItem(slotName)
+    if currentItem then currentItem.parameters = currentItem.parameters or {} end
 
     if not currentItem then
         slotName = "legs"
         currentItem = player.equippedItem(slotName)
+        if currentItem then currentItem.parameters = currentItem.parameters or {} end
     end
     return slotName, currentItem
 end
@@ -89,10 +96,12 @@ end
 local function getBackItem()
     local slotName = "backCosmetic"
     local currentItem = player.equippedItem(slotName)
+    if currentItem then currentItem.parameters = currentItem.parameters or {} end
 
     if not currentItem then
         slotName = "back"
         currentItem = player.equippedItem(slotName)
+        if currentItem then currentItem.parameters = currentItem.parameters or {} end
     end
     return slotName, currentItem
 end
@@ -104,6 +113,7 @@ local function getHeadUnderlayItem()
     if currentItem then
         slotName = "head"
         currentItem = player.equippedItem(slotName)
+        if currentItem then currentItem.parameters = currentItem.parameters or {} end
         return slotName, currentItem
     else
         return nil, nil
@@ -117,6 +127,7 @@ local function getChestUnderlayItem()
     if currentItem then
         slotName = "chest"
         currentItem = player.equippedItem(slotName)
+        if currentItem then currentItem.parameters = currentItem.parameters or {} end
         return slotName, currentItem
     else
         return nil, nil
@@ -130,6 +141,7 @@ local function getLegsUnderlayItem()
     if currentItem then
         slotName = "legs"
         currentItem = player.equippedItem(slotName)
+        if currentItem then currentItem.parameters = currentItem.parameters or {} end
         return slotName, currentItem
     else
         return nil, nil
@@ -143,6 +155,7 @@ local function getBackUnderlayItem()
     if currentItem then
         slotName = "back"
         currentItem = player.equippedItem(slotName)
+        if currentItem then currentItem.parameters = currentItem.parameters or {} end
         return slotName, currentItem
     else
         return nil, nil
@@ -327,6 +340,8 @@ function update(dt)
     self.underlayLegsSlotName, self.currentLegsItemUnderlay = getLegsUnderlayItem()
     self.underlayBackSlotName, self.currentBackItemUnderlay = getBackUnderlayItem()
 
+    local canUnderlay = self.mode == "xSB"
+
     if self.mode == "xSB" and self.innerHead then -- On xStarbound, any specified animated head config file serves as the head underlay.
         local directives = getFrame(currentDirection, currentEmoteFrame, false, true)
         player.setFacialHairDirectives(directives)
@@ -376,7 +391,12 @@ function update(dt)
         end
     end
 
-    if self.currentHatUnderlay and self.currentHatUnderlay.parameters.advancedHatter then
+    if
+        canUnderlay
+        and self.currentHatUnderlay
+        and self.currentHatUnderlay.parameters.underlaid
+        and self.currentHatUnderlay.parameters.advancedHatter
+    then
         if getVersion(true) == 2 then
             if
                 not self.currentHatUnderlay.parameters.advancedHatter[currentDirectionName][self.emotes[currentEmote]]
