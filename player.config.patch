@@ -1,7 +1,0 @@
-[	
-	{
-		"op": "add",
-		"path": "/genericScriptContexts/advancedHatter",
-		"value": "/scripts/advancedHatHandler.lua"
-	}
-]
