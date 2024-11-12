@@ -301,15 +301,20 @@ function init()
     local species = player.species()
     if not hairGroups[species] then resolveHairGroups(species, hairGroups, mode) end
 
-    self.mode = _ENV["xsb"] and "xSB"
-        or _ENV["player"]["setFacialHairType"] and "SE/oSB"
-        or _ENV["_star_player"] and "hasiboundlite"
-        or nil
+    self.mode = _ENV["xsb"] and "xSB" or _ENV["player"]["setFacialHairType"] and "SE/oSB" or nil
 
     local head = player.getProperty("animatedHead") -- Note: Name of the hat to use as the animated head sprite.
     if type(head) ~= "string" then
         self.headSpriteName = nil
         self.innerHead = nil
+        if self.mode == "xSB" or self.mode == "SE/oSB" then
+            local oldHair = player.getProperty("xHatter::oldHairParams")
+            if type(oldHair) == "table" then
+                if type(oldHair.hairType) == "string" then player.setHairType(oldHair.hairType) end
+                if type(oldHair.facialHairGroup) == "string" then player.setFacialHairGroup(oldHair.facialHairGroup) end
+                if type(oldHair.facialHairType) == "string" then player.setFacialHairType(oldHair.facialHairType) end
+            end
+        end
         return
     end
     self.headSpriteName = head
@@ -325,7 +330,8 @@ function init()
         end
     else
         local headConfigPath = "/animatedhats/" .. head .. ".json"
-        if pcall(root.assetJson, headConfigPath) then -- Logs a harmless error if the expected animated head config doesn't exist.
+        if pcall(root.assetJson, headConfigPath) then
+            -- Logs a harmless error if the expected animated head config doesn't exist.
             self.innerHead = head and self.mode and root.assetJson("/animatedhats/" .. head .. ".json") or nil
             if self.innerHead then self.innerHead.parameters = self.innerHead.parameters or {} end
         else
@@ -334,13 +340,18 @@ function init()
     end
 
     if self.innerHead and hairGroups[species] then
-        if self.mode == "hasiboundlite" then
-            _star_player():set_hair_type(hairGroups[species].hairType)
-            _star_player():set_facialHair_group(hairGroups[species].facialHairGroup)
-            _star_player():set_facialHair_type(hairGroups[species].facialHairType)
-        elseif self.mode == "xSB" or self.mode == "SE/oSB" then
+        if self.mode == "xSB" or self.mode == "SE/oSB" then
             species = player.imagePath() or species -- FezzedOne: Added image path detection for xSB, oSB and SE.
             if not hairGroups[species] then resolveHairGroups(species, hairGroups, mode) end
+            -- FezzedOne: If xSB, oSB or SE is detected, xHatter now saves your character's old hair parameters
+            -- and sets them back when clearing the head hat.
+            if not player.getProperty("xHatter::oldHairParams") then
+                player.setProperty("xHatter::oldHairParams", {
+                    hairType = player.hairType(),
+                    facialHairGroup = player.facialHairGroup(),
+                    facialHairType = player.facialHairType(),
+                })
+            end
             player.setHairType(hairGroups[species].hairType)
             player.setFacialHairGroup(hairGroups[species].facialHairGroup)
             player.setFacialHairType(hairGroups[species].facialHairType)
@@ -421,9 +432,7 @@ function update(dt)
             local directives = getFrame(currentDirection, currentEmoteFrame, false, false)
 
             if directives then
-                if self.primaryHatMode == "hasiboundlite" then
-                    _star_player():set_facialHair_directives(directives)
-                elseif self.primaryHatMode == "SE/oSB" then
+                if self.primaryHatMode == "SE/oSB" then
                     player.setFacialHairDirectives(directives)
                 else -- FezzedOne: Detected xStarbound or stock Starbound.
                     self.currentHat.parameters.directives = directives

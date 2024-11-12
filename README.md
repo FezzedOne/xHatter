@@ -35,7 +35,8 @@ The guide below described the functionality to integrate the sprite sheet into t
 ```
   
   This parameter is also supported on hats.
-- Fixed various crashes in the Lua script.
+- Fixed various potential crashes in the Lua script.
+- If you're using xStarbound, OpenStarbound or StarExtensions, characters' original hair properties are saved when a base head item is set via the **Head Setter** and restored if the base item is later removed.
 
 ## xStarbound-only features
 
@@ -43,4 +44,4 @@ The guide below described the functionality to integrate the sprite sheet into t
 - Characters who have a base head item set via the Head Setter now use it as an underlay behind all hats and hat underlays. For all intents and purposes, it acts as the character's own fully animated head sprite; you can even wear xHatter and Animated Hatter hats without issues!
 
 ## Important note
-Like Advanced Hatter, xHatter changes the `"facialHair"` and `"facialHairType"` of any characters who have a base head item set via the Head Setter.
+Like Advanced Hatter, xHatter changes the `"facialHair"` and `"facialHairType"` of any characters who have a base head item set via the Head Setter. If you're using xStarbound, OpenStarbound or StarExtensions, the original hair properties will be restored if the base head item is later removed.
