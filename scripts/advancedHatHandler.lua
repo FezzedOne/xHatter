@@ -316,7 +316,7 @@ function init()
 
     if self.mode == "xSB" or self.mode == "SE/oSB" then
         if not root.assetExists then root.assetExists = root.assetOrigin end
-        local headConfigPath = root.assetJson("/animatedhats/" .. head .. ".json")
+        local headConfigPath = "/animatedhats/" .. head .. ".json"
         if root.assetExists(headConfigPath) then
             self.innerHead = head and self.mode and root.assetJson("/animatedhats/" .. head .. ".json") or nil
             if self.innerHead then self.innerHead.parameters = self.innerHead.parameters or {} end
@@ -324,7 +324,7 @@ function init()
             self.innerHead = nil
         end
     else
-        local headConfigPath = root.assetJson("/animatedhats/" .. head .. ".json")
+        local headConfigPath = "/animatedhats/" .. head .. ".json"
         if pcall(root.assetJson, headConfigPath) then -- Logs a harmless error if the expected animated head config doesn't exist.
             self.innerHead = head and self.mode and root.assetJson("/animatedhats/" .. head .. ".json") or nil
             if self.innerHead then self.innerHead.parameters = self.innerHead.parameters or {} end
