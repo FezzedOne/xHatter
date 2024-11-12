@@ -301,12 +301,19 @@ function init()
     local species = player.species()
     if not hairGroups[species] then resolveHairGroups(species, hairGroups, mode) end
 
-    local head = player.getProperty("animatedHead") -- Note: Name of the hat to use as the animated head sprite.
-    self.headSpriteName = head
     self.mode = _ENV["xsb"] and "xSB"
         or _ENV["player"]["setFacialHairType"] and "SE/oSB"
         or _ENV["_star_player"] and "hasiboundlite"
         or nil
+
+    local head = player.getProperty("animatedHead") -- Note: Name of the hat to use as the animated head sprite.
+    if not type(head) == "string" then
+        self.headSpriteName = nil
+        self.innerHead = nil
+        return
+    end
+    self.headSpriteName = head
+
     if self.mode == "xSB" or self.mode == "SE/oSB" then
         if not root.assetExists then root.assetExists = root.assetOrigin end
         local headConfigPath = root.assetJson("/animatedhats/" .. head .. ".json")
