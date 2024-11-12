@@ -192,13 +192,13 @@ local function getFrame(direction, emoteFrame, isUnderlay, useAnimatedHead)
     -- Out of border check
     local params = self[hatToCheck].parameters or {}
     local baseDirectives = type(params.directives) == "string" and params.directives or ""
-    if not type(params.advancedHatter) == "table" then return baseDirectives end
+    if type(params.advancedHatter) ~= "table" then return baseDirectives end
 
     -- FezzedOne: Added complete type checks to ensure this function never throws an error on arbitrary item data.
     -- As a bonus, the `"directives"` parameter on head items is used if any (or all) animation directive strings are missing.
     if getVersion(isUnderlay, useAnimatedHead) == 2 then
         local dirSpec = params.advancedHatter[currentDirectionName]
-        if not type(dirSpec) == "table" then return baseDirectives end
+        if type(dirSpec) ~= "table" then return baseDirectives end
 
         local emoteSpec = dirSpec[self.emotes[emote]]
         frame = math.min(frame, #emoteSpec)
@@ -206,7 +206,7 @@ local function getFrame(direction, emoteFrame, isUnderlay, useAnimatedHead)
         directives = type(emoteSpec[frame]) == "string" and emoteSpec[frame] or baseDirectives
     else -- previous version
         local emoteSpec = params.advancedHatter[self.emotes[emote]]
-        if not type(emoteSpec) == "table" then return baseDirectives end
+        if type(emoteSpec) ~= "table" then return baseDirectives end
 
         frame = math.min(frame, #emoteSpec)
 
@@ -307,7 +307,7 @@ function init()
         or nil
 
     local head = player.getProperty("animatedHead") -- Note: Name of the hat to use as the animated head sprite.
-    if not type(head) == "string" then
+    if type(head) ~= "string" then
         self.headSpriteName = nil
         self.innerHead = nil
         return
