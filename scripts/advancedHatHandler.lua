@@ -56,7 +56,7 @@ local function getHeadItem()
     if not currentItem then
         slotName = "head"
         currentItem = player.equippedItem(slotName)
-        currentItem.parameters = currentItem.parameters or {}
+        if currentItem then currentItem.parameters = currentItem.parameters or {} end
     end
 
     if not currentItem then
