@@ -307,7 +307,24 @@ function init()
         or _ENV["player"]["setFacialHairType"] and "SE/oSB"
         or _ENV["_star_player"] and "hasiboundlite"
         or nil
-    self.innerHead = head and self.mode and root.assetJson("/animatedhats/" .. head .. ".json") or nil
+    if self.mode == "xSB" or self.mode == "SE/oSB" then
+        if not root.assetExists then root.assetExists = root.assetOrigin end
+        local headConfigPath = root.assetJson("/animatedhats/" .. head .. ".json")
+        if root.assetExists(headConfigPath) then
+            self.innerHead = head and self.mode and root.assetJson("/animatedhats/" .. head .. ".json") or nil
+            if self.innerHead then self.innerHead.parameters = self.innerHead.parameters or {} end
+        else
+            self.innerHead = nil
+        end
+    else
+        local headConfigPath = root.assetJson("/animatedhats/" .. head .. ".json")
+        if pcall(root.assetJson, headConfigPath) then -- Logs a harmless error if the expected animated head config doesn't exist.
+            self.innerHead = head and self.mode and root.assetJson("/animatedhats/" .. head .. ".json") or nil
+            if self.innerHead then self.innerHead.parameters = self.innerHead.parameters or {} end
+        else
+            self.innerHead = nil
+        end
+    end
 
     if self.innerHead and hairGroups[species] then
         if self.mode == "hasiboundlite" then
@@ -342,12 +359,22 @@ function update(dt)
 
     local canUnderlay = self.mode == "xSB"
 
-    if self.mode == "xSB" and self.innerHead then -- On xStarbound, any specified animated head config file serves as the head underlay.
-        local directives = getFrame(currentDirection, currentEmoteFrame, false, true)
-        player.setFacialHairDirectives(directives)
-
-        self.previousEmote = currentEmoteFrame
-        self.previousDirection = currentDirection
+    if
+        self.mode == "xSB"
+        and self.innerHead
+        and (currentDirection ~= self.previousDirection or currentEmoteFrame ~= self.previousEmote)
+    then -- On xStarbound, any specified animated head config file serves as the head underlay.
+        if type(self.innerHead.parameters.advancedHatter) == "table" then
+            local directives = getFrame(currentDirection, currentEmoteFrame, false, true)
+            player.setFacialHairDirectives(directives)
+        elseif type(self.innerHead.parameters.xHatter) == "table" then
+            if currentDirection ~= self.previousDirection then
+                local dirString = self.innerHead.parameters.xHatter[currentDirection == -1 and "left" or "right"]
+                self.innerHead.parameters.directives = type(dirString) == "string" and dirString
+                    or self.innerHead.parameters.directives
+                player.setFacialHairDirectives(dirString)
+            end
+        end
     end
 
     local safeEmoteCheck1 = function(params, currentEmote)
@@ -396,9 +423,6 @@ function update(dt)
                     if self.slotName then player.setEquippedItem(self.slotName, self.currentHat) end
                 end
             end
-
-            self.previousEmote = currentEmoteFrame
-            self.previousDirection = currentDirection
         end
     elseif self.currentHat and type(self.currentHat.parameters.xHatter) == "table" then
         if currentDirection ~= self.previousDirection then
@@ -406,9 +430,6 @@ function update(dt)
             self.currentHat.parameters.directives = type(dirString) == "string" and dirString
                 or self.currentHat.parameters.directives
             player.setEquippedItem(self.slotName, self.currentHat)
-
-            self.previousEmote = currentEmoteFrame
-            self.previousDirection = currentDirection
         end
     end
 
@@ -435,9 +456,6 @@ function update(dt)
         if currentDirection ~= self.previousDirection or currentEmoteFrame ~= self.previousEmote then
             self.currentHatUnderlay.parameters.directives = getFrame(currentDirection, currentEmoteFrame, true, false)
             player.setEquippedItem(self.underlaySlotName, self.currentHatUnderlay)
-
-            self.previousEmote = currentEmoteFrame
-            self.previousDirection = currentDirection
         end
     elseif self.currentHatUnderlay and type(self.currentHatUnderlay.parameters.xHatter) == "table" then
         if currentDirection ~= self.previousDirection then
@@ -445,9 +463,6 @@ function update(dt)
             self.currentHatUnderlay.parameters.directives = type(dirString) == "string" and dirString
                 or self.currentHatUnderlay.parameters.directives
             player.setEquippedItem(self.underlaySlotName, self.currentHatUnderlay)
-
-            self.previousEmote = currentEmoteFrame
-            self.previousDirection = currentDirection
         end
     end
 
@@ -457,9 +472,6 @@ function update(dt)
             self.currentChestItem.parameters.directives = type(dirString) == "string" and dirString
                 or self.currentChestItem.parameters.directives
             player.setEquippedItem(self.chestSlotName, self.currentChestItem)
-
-            self.previousEmote = currentEmoteFrame
-            self.previousDirection = currentDirection
         end
     end
 
@@ -475,9 +487,6 @@ function update(dt)
             self.currentChestItemUnderlay.parameters.directives = type(dirString) == "string" and dirString
                 or self.currentChestItemUnderlay.parameters.directives
             player.setEquippedItem(self.underlayChestSlotName, self.currentChestItemUnderlay)
-
-            self.previousEmote = currentEmoteFrame
-            self.previousDirection = currentDirection
         end
     end
 
@@ -487,9 +496,6 @@ function update(dt)
             self.currentLegsItem.parameters.directives = type(dirString) == "string" and dirString
                 or self.currentLegsItem.parameters.directives
             player.setEquippedItem(self.legsSlotName, self.currentLegsItem)
-
-            self.previousEmote = currentEmoteFrame
-            self.previousDirection = currentDirection
         end
     end
 
@@ -503,9 +509,6 @@ function update(dt)
             self.currentLegsItemUnderlay.parameters.directives =
                 self.currentLegsItemUnderlay.parameters.xHatter[currentDirection == -1 and "left" or "right"]
             player.setEquippedItem(self.underlayLegsSlotName, self.currentLegsItemUnderlay)
-
-            self.previousEmote = currentEmoteFrame
-            self.previousDirection = currentDirection
         end
     end
 
@@ -515,9 +518,6 @@ function update(dt)
             self.currentBackItem.parameters.directives = type(dirString) == "string" and dirString
                 or self.currentBackItem.parameters.directives
             player.setEquippedItem(self.backSlotName, self.currentBackItem)
-
-            self.previousEmote = currentEmoteFrame
-            self.previousDirection = currentDirection
         end
     end
 
@@ -533,9 +533,9 @@ function update(dt)
             self.currentBackItemUnderlay.parameters.directives = type(dirString) == "string" and dirString
                 or self.currentBackItemUnderlay.parameters.directives
             player.setEquippedItem(self.underlayBackSlotName, self.currentBackItemUnderlay)
-
-            self.previousEmote = currentEmoteFrame
-            self.previousDirection = currentDirection
         end
     end
+
+    self.previousEmote = currentEmoteFrame
+    self.previousDirection = currentDirection
 end
