@@ -301,7 +301,10 @@ function init()
     local species = player.species()
     if not hairGroups[species] then resolveHairGroups(species, hairGroups, mode) end
 
-    self.mode = _ENV["xsb"] and "xSB" or _ENV["player"]["setFacialHairType"] and "SE/oSB" or nil
+    self.mode = _ENV["xsb"] and "xSB" 
+            or _ENV["player"]["setFacialHairType"] and "SE/oSB"
+            or _ENV["neon"] and "Neon"
+            or nil
 
     local head = player.getProperty("animatedHead") -- Note: Name of the hat to use as the animated head sprite.
     if type(head) ~= "string" then
@@ -314,6 +317,7 @@ function init()
                 if type(oldHair.facialHairGroup) == "string" then player.setFacialHairGroup(oldHair.facialHairGroup) end
                 if type(oldHair.facialHairType) == "string" then player.setFacialHairType(oldHair.facialHairType) end
             end
+            player.setProperty("xHatter::oldHairParams", nil)
         end
         return
     end
@@ -344,7 +348,7 @@ function init()
             species = player.imagePath() or species -- FezzedOne: Added image path detection for xSB, oSB and SE.
             if not hairGroups[species] then resolveHairGroups(species, hairGroups, mode) end
             -- FezzedOne: If xSB, oSB or SE is detected, xHatter now saves your character's old hair parameters
-            -- and sets them back when clearing the head hat.
+            -- and sets them back when clearing the configured head base sprite.
             if not player.getProperty("xHatter::oldHairParams") then
                 player.setProperty("xHatter::oldHairParams", {
                     hairType = player.hairType(),
@@ -355,6 +359,10 @@ function init()
             player.setHairType(hairGroups[species].hairType)
             player.setFacialHairGroup(hairGroups[species].facialHairGroup)
             player.setFacialHairType(hairGroups[species].facialHairType)
+        elseif self.mode == "Neon" then -- FezzedOne: Added Neon support, such as it is.
+            neon.player.setHairType(hairGroups[species].hairType)
+            neon.player.setFacialHairGroup(hairGroups[species].facialHairGroup)
+            neon.player.setFacialHairType(hairGroups[species].facialHairType)
         end
     end
 end
@@ -434,6 +442,8 @@ function update(dt)
             if directives then
                 if self.primaryHatMode == "SE/oSB" then
                     player.setFacialHairDirectives(directives)
+                elseif self.mode == "Neon" then -- FezzedOne: Added Neon support, such as it is.
+                    neon.player.setFacialHairDirectives(directives)
                 else -- FezzedOne: Detected xStarbound or stock Starbound.
                     self.currentHat.parameters.directives = directives
                     if self.slotName then player.setEquippedItem(self.slotName, self.currentHat) end
