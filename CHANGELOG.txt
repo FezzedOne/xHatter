@@ -1,0 +1,5 @@
+## Changelog for xHatter v1.4
+
+- Added support for xStarbound's cosmetic underlays.
+- Added support for faceable chest, legs and back items using the `"xHatter"` parameter. Hats may also use this parameter.
+- If you're using xStarbound, using an Advanced Hatter or xHatter hat (or any hat with a custom sprite) as your base head is now more seamless — hats will be visually overlaid on the sprite now. Unlike regular underlays, this is visible to players using any client.
