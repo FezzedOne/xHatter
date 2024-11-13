@@ -6,12 +6,12 @@
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-      <meta name="description" content="Advanced Hatter for Starbound Vanilla animated hats">
+      <meta name="description" content="Site for generating animated hats in vanilla Starbound">
       <meta property="og:image" content="https://i.imgur.com/UHpdlsy.png" />
       <meta property="og:site_name" content="GitHub" />
       <meta property="og:type" content="object" />
-      <meta property="og:title" content="Advanced Hatter" />
-      <meta property="og:url" content="https://krashv.github.io/Starbound-AdvancedHatter/" />
+      <meta property="og:title" content="xHatter" />
+      <meta property="og:url" content="https://fezzedone.github.io/xHatter/" />
       <meta property="og:description" content="Make your custom hats animated!" />
       <link rel="image_src" href="imgs/hat.png">
       <link rel="shortcut icon" type="image/ico" href="favicon.ico">
@@ -25,7 +25,7 @@
 	   <script src="scripts/cookies.js"></script>
       <script src="scripts/FileSaver.min.js"></script>
       <script src="scripts/drawables.js"></script>
-      <title>Advanced Hatter</title>
+      <title>xHatter</title>
    </head>
    <body>
       <!-- Content wrapper (mainly to set a different footer color) -->
@@ -41,7 +41,7 @@
                   <span class="icon-bar"></span>
                   <span class="icon-bar"></span>
                   </button>
-                  <a class="navbar-brand" href="https://github.com/KrashV" target="_blank">
+                  <a class="navbar-brand" href="https://github.com/FezzedOne" target="_blank">
                   <i class="fa fa-github"></i>
                   <span>Degranon</span>
                   </a>
@@ -51,13 +51,10 @@
                   <ul class="nav navbar-nav">
                      <!-- li class="active" -->
                      <li>
-                        <a href="https://github.com/KrashV/Starbound-AdvancedHatter/tree/master" target="_blank">Download the mod</a>
+                        <a href="https://github.com/FezzedOne/xHatter/tree/master" target="_blank">Download the mod</a>
                      </li>
                      <li>
-                        <a href="https://github.com/KrashV/Starbound-AdvancedHatter/tree/gh-pages" target="_blank">View project on GitHub</a>
-                     </li>
-                     <li>
-                        <a href="https://www.paypal.me/degranon" target="_blank">Donate</a>
+                        <a href="https://github.com/FezzedOne/xHatter/tree/gh-pages" target="_blank">View project on GitHub</a>
                      </li>
                   </ul>
                </div>
@@ -72,6 +69,7 @@
                      Starbound Advanced Hatter
                   </h1>
                   <p>Custom emotes for Starbound hats</p>
+                  <p>Created by Degranon and improved by FezzedOne</p>
                </div>
             </div>
          </div>
@@ -83,16 +81,16 @@
             Successfully copied to clipboard!
          </div>
          <div class="alert alert-warning" id="warning-dimension-frame">
-            The sprite dimenstions must be 43x43px
+            Sprite dimensions must be 43x43px
          </div>
          <div class="alert alert-warning" id="warning-dimension-sheet">
-            The spritesheet dimesnions must be 387x344
+            Spritesheet dimensions must be 387x344
          </div>
          <div class="alert alert-danger" id="warning-empty-frame">
-            Could not find idle image
+            Could not find idle emote image
          </div>
          <div class="alert alert-danger" id="warning-empty-sheet">
-            Emote spritesheet is not loaded
+            Emote spritesheet not loaded
          </div>
          <!-- Modal -->
          <div id="raceSelectModal" class="modal fade" role="dialog">
@@ -101,13 +99,14 @@
                <div class="modal-content">
                   <div class="modal-header">
                      <button type="button" class="close" data-dismiss="modal">&times;</button>
-                     <h4 class="modal-title">Select the race</h4>
+                     <h4 class="modal-title">Select (vanilla) race</h4>
                   </div>
                   <div class="modal-body">
                      <select id="raceSelect" class="form-control">
                         <option value="human" selected>Human</option>
                         <option value="avian">Avian</option>
                         <option value="apex">Apex</option>
+                        <option value="fenerox">Fenerox</option>
                         <option value="floran">Floran</option>
                         <option value="hylotl">Hylotl</option>
                         <option value="glitch">Glitch</option>
@@ -131,8 +130,8 @@
                      <h4 class="modal-title">Warning!</h4>
                   </div>
                   <div class="modal-body">
-                     <p><a href='https://github.com/KrashV/Starbound-AdvancedHatter/releases/latest' target="_blank">The mod</a> has been updated!</p>
-					 <p>You need it for your hats to work.</p>
+                     <p>Before you go, download <a href='https://github.com/FezzedOne/xHatter/releases/latest' target="_blank">xHatter</a> or <a href='https://github.com/KrashV/Starbound-AdvancedHatter/releases/latest' target="_blank">Advanced Hatter</a>.</p>
+					 <p>You need either mod to use your generated hats in game.</p>
                   </div>
                   <div class="modal-footer">
 					 <button type="button" class="btn btn-default" data-dismiss="modal">Got it!</button>
@@ -190,7 +189,7 @@
                      <label for="itemName">Item name:</label>
                      <input id="itemName" type="text" class="form-control" value="^cyan;Animated Hat">
                      <label for="itemDescription">Item description:</label>
-                     <input id="itemDescription" type="text" class="form-control" value="A custom animated hat created by Deggy!">
+                     <input id="itemDescription" type="text" class="form-control" value="A custom animated hat created by FezzedOne!">
                      <label for="itemRarity">Item rarity:</label>
                      <select id="itemRarity" class="form-control">
                         <option value="common">Common</option>
@@ -217,8 +216,8 @@
                         <button id="btnCommand" class="btn btn-success" title="Generates a /spawnitem command that can be executed in-game.">Generate command file</button>
                         <button id="btnCommandClipboard" class="btn btn-primary" title="Copy /spawnitem to clipboard"><i class="fa fa-copy"></i></button>
                      </div>
-                     <button id="btnDirective" class="btn btn-warning" title="This one is broken">Generate emoteDirective File</button>
-                     <p><strong>Emote directives are deprecated: use <a href="https://github.com/StarExtensions/StarExtensions">StarExtensions</a> or <a href="https://github.com/TheFurryDevil/hasiboundlite">HasiboundLite</a> instead</strong></strong></p>
+                     <button id="btnDirective" class="btn btn-warning" title="Deprecated!">Generate emote directive file</button>
+                     <p><strong>Emote directives are deprecated! Use <a href="https://github.com/xStarbound/xStarbound">xStarbound</a>, <a href="https://github.com/OpenStarbound/OpenStarbound">OpenStarbound</a>, <a href="https://github.com/StarExtensions/StarExtensions">StarExtensions</a> or <a href="https://github.com/Starbound-Neon/Neon">Neon</a> instead.</strong></strong></p>
                   </div>
                </div>
                <div class="col-md-6">
@@ -235,7 +234,7 @@
             <div class="row">
                <div class="col-md-6" style="z-index:3;">
                   <h3 class="content-header">Examples</h3>
-                  <p>An example of an advanced hat: idle, happy, blink and blabber emotions with asymmetry support.</p>
+                  <p>An example of an Advanced Hatter or xHatter hat: Idle, happy, blink and blabber emotions with asymmetry support.</p>
                   <img src="imgs/preview.gif" alt="Hat animation preview">
                </div>
                <div class="col-md-6" style="z-index:3;">
@@ -244,11 +243,11 @@
                      Pretty much as <a href="https://silverfeelin.github.io/Starbound-Hatter/" target="_blank">Hatter</a>, Advanced Hatter requires a 43x43 image to work with. You can find the template below:
                   </p>
                   <img style="vertical-align: top;" src="imgs/hatterCharacter.png"  alt="Hatter template">
-                  <p>For Paint.NET users, <a href="imgs/hatterTemplate.pdn">this project file</a> can be used to easily create hats. Make sure you hide the character layer before saving the hat, and that you select the PNG file format!</p>
+                  <p>For Paint.NET and LazPaint users, <a href="imgs/hatterTemplate.pdn">this project file</a> can be used to easily create hats. Make sure you hide the character layer before saving the hat, and that you select the PNG file format!</p>
                   <p>For creating the animation, select the desired emote and a frame. You can always create a static emotion (even if it supports animation) by setting the first frame only.</p>
                   <p>You can also import a spritesheet directly, download the template below:</p>
                   <img style="vertical-align: top;" src="imgs/emote.png"  alt="Emote template">
-                  <p>Again, for Paint.NET users, <a href="imgs/emoteTemplate.pdn">this project file</a> can be used to easily create the hat. Make sure you hide the template layer before saving the hat, and that you select the PNG file format!</p>
+                  <p>Again, for Paint.NET and LazPaint users, <a href="imgs/emoteTemplate.pdn">this project file</a> can be used to easily create the hat. Make sure you hide the template layer before saving the hat, and that you select the PNG file format!</p>
                   <p>For Aseprite users, you can download <a href="imgs/template.ase">template.ase</a> file to work with.</p>
                </div>
             </div>
@@ -261,7 +260,7 @@
                <p><a href="http://playstarbound.com/">Official Starbound site</a></p>
                <hr>
                <div>
-                  <p style="float:right;">Contact me: <a href="mailto:boba09@list.ru" target="_blank">boba09@list.ru</a></p>
+                  <p style="float:right;">Contact FezzedOne: <a href="mailto:renofezzedone@yandex.com" target="_blank">renofezzedone@yandex.com</a>, Degranon: <a href="mailto:boba09@list.ru" target="_blank">boba09@list.ru</a></p>
                </div>
             </div>
          </div>
