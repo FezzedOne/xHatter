@@ -1,6 +1,6 @@
 # xHatter
 
-This fork of Degranon's Advanced Hatter supports [xStarbound xClient](https://github.com/xStarbound/xStarbound) by FezzedOne, Kae and other contributors; [OpenStarbound](https://github.com/OpenStarbound/OpenStarbound) by Kae and other contributors; [Starbound Neon](https://github.com/Starbound-Neon/Neon) by TheFurryDevil; and [StarExtensions v1.5+](https://github.com/StarExtensions/StarExtensions) by Kae. The head sprite replacement feature requires Quickbar or Stardust Core Lite.
+This fork of Degranon's Advanced Hatter supports [xStarbound xClient](https://github.com/xStarbound/xStarbound) by FezzedOne, Kae and other contributors; [OpenStarbound](https://github.com/OpenStarbound/OpenStarbound) by Kae and other contributors; [Starbound Neon](https://github.com/Starbound-Neon/Neon) by Lonaasan; and [StarExtensions v1.5+](https://github.com/StarExtensions/StarExtensions) by Kae. The head sprite replacement feature requires Quickbar or Stardust Core Lite.
 
 # Installation
 
