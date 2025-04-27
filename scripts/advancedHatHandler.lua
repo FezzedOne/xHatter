@@ -301,10 +301,10 @@ function init()
     local species = player.species()
     if not hairGroups[species] then resolveHairGroups(species, hairGroups, mode) end
 
-    self.mode = _ENV["xsb"] and "xSB" 
-            or _ENV["player"]["setFacialHairType"] and "SE/oSB"
-            or _ENV["neon"] and "Neon"
-            or nil
+    self.mode = _ENV["xsb"] and "xSB"
+        or _ENV["player"]["setFacialHairType"] and "SE/oSB"
+        or _ENV["neon"] and "Neon"
+        or nil
 
     local head = player.getProperty("animatedHead") -- Note: Name of the hat to use as the animated head sprite.
     if type(head) ~= "string" then
@@ -425,7 +425,7 @@ function update(dt)
 
     if self.currentHat and type(self.currentHat.parameters.advancedHatter) == "table" then
         if getVersion(false) == 2 then
-            if not safeEmoteCheck2(self.currentHat.parameters.advancedHatter, currentDirection, currentEmote) then
+            if not safeEmoteCheck2(self.currentHat.parameters.advancedHatter, currentDirectionName, currentEmote) then
                 currentEmote = "idle"
                 currentEmoteFrame = "idle"
             end
