@@ -227,6 +227,8 @@ end
 
 function init()
     self.previousEmote = "idle"
+    self.previousUnderlayEmote = "idle"
+    self.previousInnerEmote = "idle"
     self.previousPosition = world.entityPosition(player.id())
     self.previousDirection = "none"
 
@@ -370,7 +372,9 @@ end
 function update(dt)
     -- Retrieve current parameters --
     local currentEmoteFrame = getEmote()
+    local currentUnderlayEmoteFrame, currentInnerEmoteFrame = currentEmoteFrame, currentEmoteFrame
     local currentEmote = currentEmoteFrame:match("[^%d%W]+")
+    local currentUnderlayEmote, currentInnerEmote = currentEmote, currentEmote
     local currentDirection = mcontroller.facingDirection()
     local currentDirectionName = currentDirection > 0 and "default" or "reverse"
 
@@ -388,10 +392,10 @@ function update(dt)
     if
         self.mode == "xSB"
         and self.innerHead
-        and (currentDirection ~= self.previousDirection or currentEmoteFrame ~= self.previousEmote)
+        and (currentDirection ~= self.previousDirection or currentInnerEmoteFrame ~= self.previousInnerEmote)
     then -- On xStarbound, any specified animated head config file serves as the head underlay.
         if type(self.innerHead.parameters.advancedHatter) == "table" then
-            local directives = getFrame(currentDirection, currentEmoteFrame, false, true)
+            local directives = getFrame(currentDirection, currentInnerEmoteFrame, false, true)
             player.setFacialHairDirectives(directives)
         elseif type(self.innerHead.parameters.xHatter) == "table" then
             if currentDirection ~= self.previousDirection then
@@ -465,26 +469,27 @@ function update(dt)
         and self.currentHatUnderlay.parameters.underlaid
         and type(self.currentHatUnderlay.parameters.advancedHatter) == "table"
     then
-        if getVersion(false) == 2 then
+        if getVersion(true) == 2 then
             if
                 not safeEmoteCheck2(
                     self.currentHatUnderlay.parameters.advancedHatter,
                     currentDirectionName,
-                    currentEmote
+                    currentUnderlayEmote
                 )
             then
-                currentEmote = "idle"
-                currentEmoteFrame = "idle"
+                currentUnderlayEmote = "idle"
+                currentUnderlayEmoteFrame = "idle"
             end
         else -- support previous version
             if not safeEmoteCheck1(self.currentHatUnderlay.parameters.advancedHatter, currentEmote) then
-                currentEmote = "idle"
-                currentEmoteFrame = "idle"
+                currentUnderlayEmote = "idle"
+                currentUnderlayEmoteFrame = "idle"
             end
         end
 
-        if currentDirection ~= self.previousDirection or currentEmoteFrame ~= self.previousEmote then
-            self.currentHatUnderlay.parameters.directives = getFrame(currentDirection, currentEmoteFrame, true, false)
+        if currentDirection ~= self.previousDirection or currentUnderlayEmoteFrame ~= self.previousEmote then
+            self.currentHatUnderlay.parameters.directives =
+                getFrame(currentDirection, currentUnderlayEmoteFrame, true, false)
             player.setEquippedItem(self.underlaySlotName, self.currentHatUnderlay)
         end
     elseif self.currentHatUnderlay and type(self.currentHatUnderlay.parameters.xHatter) == "table" then
@@ -566,6 +571,8 @@ function update(dt)
         end
     end
 
+    self.previousInnerEmote = currentInnerEmoteFrame
     self.previousEmote = currentEmoteFrame
+    self.previousUnderlayEmote = currentUnderlayEmoteFrame
     self.previousDirection = currentDirection
 end
