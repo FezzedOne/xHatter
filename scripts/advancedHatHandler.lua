@@ -467,7 +467,11 @@ function update(dt)
     then
         if getVersion(false) == 2 then
             if
-                not safeEmoteCheck2(self.currentHatUnderlay.parameters.advancedHatter, currentDirection, currentEmote)
+                not safeEmoteCheck2(
+                    self.currentHatUnderlay.parameters.advancedHatter,
+                    currentDirectionName,
+                    currentEmote
+                )
             then
                 currentEmote = "idle"
                 currentEmoteFrame = "idle"
