@@ -3,16 +3,20 @@
 /////////////
 
 // Page load
-$(function() {
+$(function () {
   "use strict";
 
-
   // Set feature background image based on time of day.
-  var time = new Date().getHours(), path;
+  var time = new Date().getHours(),
+    path;
 
-  path = time >= 18 || time < 6 ? "imgs/backgroundNight.jpg" : "imgs/backgroundDay.jpg";
+  path =
+    time >= 18 || time < 6
+      ? "imgs/backgroundNight.jpg"
+      : "imgs/backgroundDay.jpg";
 
-  document.getElementById("featureBackground").style.backgroundImage = "url('" + path +  "')";
+  document.getElementById("featureBackground").style.backgroundImage =
+    "url('" + path + "')";
 });
 
 // Event handler that checks if the value of the element with id 'idFrom' is a hexadecimal colour code, and applies it to the value of the element with id 'idTo'.
@@ -20,7 +24,7 @@ function updateColour(idFrom, idTo) {
   "use strict";
 
   var text = document.getElementById(idFrom).value,
-      regex = new RegExp("^#[0-9a-f]{6}$");
+    regex = new RegExp("^#[0-9a-f]{6}$");
 
   if (regex.test(text)) {
     document.getElementById(idTo).value = text;
@@ -46,8 +50,8 @@ function intToHex(n) {
 // Returns an integer matching the given hexadecimal value.
 function hexToInt(str, startIndex, endIndex) {
   "use strict";
-  startIndex = typeof startIndex !== 'undefined' ? startIndex : 0;
-  endIndex = typeof endIndex !== 'undefined' ? endIndex : str.length;
+  startIndex = typeof startIndex !== "undefined" ? startIndex : 0;
+  endIndex = typeof endIndex !== "undefined" ? endIndex : str.length;
 
   return parseInt(str.substring(startIndex, endIndex), 16);
 }
@@ -57,7 +61,7 @@ function randomColour() {
   "use strict";
 
   var hex = "0123456789abcdef".split(""),
-      result = "#";
+    result = "#";
 
   for (var i = 0; i < 6; i++) {
     result += hex[Math.floor(Math.random() * 16)];
@@ -72,7 +76,7 @@ function getMousePos(canvas, evt) {
   var rect = canvas.getBoundingClientRect();
   return {
     x: Math.round(evt.clientX - rect.left),
-    y: Math.round(evt.clientY - rect.top)
+    y: Math.round(evt.clientY - rect.top),
   };
 }
 
@@ -83,13 +87,13 @@ function loadImages(sources, callback) {
   var loadedImages = 0;
   var numImages = 0;
   // get num of sources
-  for(var src in sources) {
+  for (var src in sources) {
     numImages++;
   }
-  for(var src in sources) {
+  for (var src in sources) {
     images[src] = new Image();
-    images[src].onload = function() {
-      if(++loadedImages >= numImages) {
+    images[src].onload = function () {
+      if (++loadedImages >= numImages) {
         callback(images);
       }
     };
@@ -105,28 +109,22 @@ function colorToHex(color) {
   colors[2] = Number(color[2]).toString(16);
   colors[3] = Number(color[3]).toString(16);
 
-  if (colors[0].length == 1)
-    colors[0] = "0" + colors[0];
-  if (colors[1].length == 1)
-    colors[1] = "0" + colors[1];
-  if (colors[2].length == 1)
-    colors[2] = "0" + colors[2];
-  if (colors[3].length == 1)
-    colors[3] = "0" + colors[3];
+  if (colors[0].length == 1) colors[0] = "0" + colors[0];
+  if (colors[1].length == 1) colors[1] = "0" + colors[1];
+  if (colors[2].length == 1) colors[2] = "0" + colors[2];
+  if (colors[3].length == 1) colors[3] = "0" + colors[3];
   return colors[0] + colors[1] + colors[2] + colors[3];
 }
-
-
 
 /**
  * Pad the value with zeroes
  * @param {number} num - Number to fill
  * @size {number} size - Amount of digits
-**/
+ **/
 
 function pad(num, size) {
-    var s = "000000000" + num;
-    return s.substr(s.length-size);
+  var s = "000000000" + num;
+  return s.substr(s.length - size);
 }
 
 /**
@@ -134,23 +132,25 @@ function pad(num, size) {
  * @param {string} alertId - Alert Id
  **/
 function showAlert(alertId) {
-	$(alertId).fadeTo(2000, 500).slideUp(500, function(){
-		$(alertId).slideUp(500);
-	});
+  $(alertId)
+    .fadeTo(2000, 500)
+    .slideUp(500, function () {
+      $(alertId).slideUp(500);
+    });
 }
-
 
 /**
-  * Gets the latest release tag of the mod
-**/
+ * Gets the latest release tag of the mod
+ **/
 
 function getReleaseTag() {
-	var tagName = ""
-    $.ajax({
-      url: "https://api.github.com/repos/KrashV/Starbound-AdvancedHatter/releases/latest",
-		  async: false
-    }).then(function(data) {
-       tagName = data.tag_name
-    });
-	return tagName
+  var tagName = "";
+  $.ajax({
+    url: "https://api.github.com/repos/FezzedOne/xHatter/releases/latest",
+    async: false,
+  }).then(function (data) {
+    tagName = data.tag_name;
+  });
+  return tagName;
 }
+
