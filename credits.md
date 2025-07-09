@@ -2,7 +2,7 @@
 
 Credits for xHatter:
 
-- **Web page:** Created by [Degranon](https://github.com/KrashV) (as Advanced Hatter) and [Silverfeelin](https://github.com/Silverfeelin) (as Starbound Hatter); updated by [FezzedOne](https://github.com/FezzedOne) (as xhatter).
+- **Web page:** Created by [Degranon](https://github.com/KrashV) (as Advanced Hatter) and [Silverfeelin](https://github.com/Silverfeelin) (as Starbound Hatter); updated by [FezzedOne](https://github.com/FezzedOne) (as xHatter).
 - **Hatter template:** Created by [Silverfeelin](https://github.com/Silverfeelin).
 - **Starbound mod:** [Degranon](https://github.com/KrashV) created the original Advanced Hatter mod; [FezzedOne](https://github.com/FezzedOne) fixed bugs, added functionality for flippable cosmetic items in all slots and added support for special functionality in xStarbound.
 
